@@ -7,6 +7,7 @@
 import re
 import statistics
 import time
+from multiprocessing import Pool, cpu_count
 from textwrap import dedent
 from urllib.request import urlopen
 
@@ -62,7 +63,7 @@ class Craigslist:
                   r'(?=</span> <span class="housing">/ %dbr )' % self.bedrooms
 
         # query HTML for all 2500 rental market listings
-        html = ''.join(gethtml(url) for url in urls)
+        html = concurrentdownload(urls)
 
         # extract prices
         strings = re.findall(pattern, html)
@@ -190,6 +191,13 @@ class Craigslist:
 
         # print statistics
         self._print()
+
+
+def concurrentdownload(urls):
+    """Download URLs concurrently and return their HTML."""
+    workers = cpu_count() * 4
+    pool = Pool(processes=workers)
+    return ''.join(pool.map(gethtml, urls))
 
 
 def gethtml(url):
