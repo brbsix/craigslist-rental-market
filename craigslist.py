@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""Get housing rental market stats from SF Craigslist"""
+"""Display Craigslist rental market statistics"""
 
 # standard imports
 import re
