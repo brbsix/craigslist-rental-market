@@ -10,7 +10,7 @@ def read(filename):
 
 setup(
     name='craigslist-rental-market',
-    version='0.0.1',
+    version='0.0.2',
     description='Display Craigslist rental market statistics',
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
