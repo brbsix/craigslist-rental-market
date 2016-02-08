@@ -22,6 +22,7 @@ class Craigslist:
 
     def __init__(self):
         # default values
+        self.minprice = 800
         self.url = 'https://sfbay.craigslist.org'
 
         # query values
@@ -48,10 +49,10 @@ class Craigslist:
     def _getprices(self):
         """Return list of prices for rental units."""
 
-        urlpattern = '{}search/{}{}?s=%d&bedrooms={}&min_price=800{}'.format(
+        urlpattern = '{}search/{}{}?s=%d&bedrooms={}&min_price={}{}'.format(
             self.site, self.region + '/' if self.region is not None else '',
-            self.search, self.bedrooms, '&nh={}'.format(self.neighborhood) if
-            self.neighborhood is not None else '')
+            self.search, self.bedrooms, self.minprice, '&nh={}'.format(
+                self.neighborhood) if self.neighborhood is not None else '')
 
         # create an iterator of all the URLs to query
         urls = (urlpattern % i for i in range(0, 2500, 100))
