@@ -14,7 +14,7 @@ setup(
     description='Display Craigslist rental market statistics',
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     url='https://github.com/brbsix/craigslist-rental-market',
     license='GPLv3',
     keywords=['craigslist', 'scraper', 'scraping'],
