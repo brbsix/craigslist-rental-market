@@ -15,7 +15,7 @@ setup(
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
     long_description=read('README.rst'),
-    # url='https://github.com/brbsix/craigslist-rental-market',
+    url='https://github.com/brbsix/craigslist-rental-market',
     license='GPLv3',
     keywords=['craigslist', 'scraper', 'scraping'],
     py_modules=['craigslist'],
