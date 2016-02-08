@@ -3,9 +3,9 @@
 from setuptools import setup
 
 
-# def read(filename):
-#     with open(filename) as f:
-#         return f.read()
+def read(filename):
+    with open(filename) as f:
+        return f.read()
 
 
 setup(
@@ -14,7 +14,7 @@ setup(
     description='Display Craigslist rental market statistics',
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
-    # long_description=read('README.rst'),
+    long_description=read('README.rst'),
     # url='https://github.com/brbsix/craigslist-rental-market',
     license='GPLv3',
     keywords=['craigslist', 'scraper', 'scraping'],
