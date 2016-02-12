@@ -208,7 +208,7 @@ def gethtml(url):
 
 def getsoup(url):
     """Return BeautifulSoup instance for given URL."""
-    return BeautifulSoup(gethtml(url))
+    return BeautifulSoup(gethtml(url), 'html.parser')
 
 
 def main():
