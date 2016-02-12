@@ -19,7 +19,10 @@ setup(
     license='GPLv3',
     keywords=['craigslist', 'scraper', 'scraping'],
     py_modules=['craigslist'],
-    install_requires=['beautifulsoup4', 'inquirer'],
+    install_requires=[
+        'appdirs', 'beautifulsoup4', 'inquirer',
+        'requests', 'requests-cache-latest'
+    ],
     entry_points={
         'console_scripts': ['craigslist=craigslist:main'],
     },

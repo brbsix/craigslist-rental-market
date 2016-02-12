@@ -4,16 +4,21 @@
 """Display Craigslist rental market statistics"""
 
 # standard imports
+import argparse
+import os
 import re
 import statistics
 import time
+from datetime import datetime as dt, timedelta
 from multiprocessing import Pool, cpu_count
 from textwrap import dedent
-from urllib.request import urlopen
 
 # external imports
 from bs4 import BeautifulSoup
+import appdirs
 import inquirer
+import requests
+import requests_cache
 
 
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
@@ -174,10 +179,18 @@ class Craigslist:
 
         self.bedrooms = int(results_bedrooms.rstrip('br'))
 
-    def run(self):
+    def run(self, cache=True):
         """Run application."""
 
         self._query()
+
+        # configure `requests` cache
+        if cache:
+            cache_dir = appdirs.user_cache_dir('craigslist')
+            os.makedirs(cache_dir, exist_ok=True)
+            requests_cache.install_cache(
+                cache_name=os.path.join(cache_dir, 'craigslist'),
+                expire_after=timedelta(hours=0.5))
 
         print('Running query...\n')
 
@@ -189,8 +202,64 @@ class Craigslist:
         # determine elapsed time of queries
         self.duration = time.time() - start
 
+        # remove expired cache entries
+        if cache:
+            # check whether `remove_expired_responses` is implemented
+            try:
+                requests_cache.remove_expired_responses()
+            except AttributeError:
+                session = requests.Session()
+                # pylint: disable=protected-access
+                if session._cache_expire_after:
+                    # pylint: disable=protected-access
+                    created_before = dt.utcnow() - session._cache_expire_after
+                    keys_to_delete = set()
+                    for key in session.cache.responses:
+                        try:
+                            created_at = session.cache.responses[key][1]
+                        except KeyError:
+                            continue
+                        if created_at < created_before:
+                            keys_to_delete.add(key)
+
+                    for key in keys_to_delete:
+                        session.cache.delete(key)
+
         # print statistics
         self._print()
+
+
+def _parser(args):
+    """Parse command-line options."""
+
+    # pylint: disable=too-few-public-methods
+    class NegateAction(argparse.Action):
+        """Support --toggle and --no-toggle options."""
+
+        def __call__(self, parser, namespace, values, option_string=None):
+            setattr(namespace, self.dest, option_string[2:4] != 'no')
+
+    parser = argparse.ArgumentParser(
+        add_help=False,
+        description='Display Craigslist rental market statistics.',
+        usage='%(prog)s [OPTION]')
+    parser.add_argument(
+        '-h', '--help',
+        action='help',
+        help=argparse.SUPPRESS)
+    parser.add_argument(
+        '--cache', '--no-cache',
+        action=NegateAction,
+        default=True,
+        help='cache network queries (default)',
+        nargs=0)
+    parser.add_argument(
+        '--version',
+        action='version',
+        help=argparse.SUPPRESS,
+        version='%(prog)s 0.0.3')
+
+    return parser.parse_args(args).cache
 
 
 def concurrentdownload(urls):
@@ -202,8 +271,7 @@ def concurrentdownload(urls):
 
 def gethtml(url):
     """Return the HTML for a given URL."""
-
-    return urlopen(url).read().decode('latin1')
+    return requests.get(url).text
 
 
 def getsoup(url):
@@ -211,10 +279,11 @@ def getsoup(url):
     return BeautifulSoup(gethtml(url), 'html.parser')
 
 
-def main():
+def main(args=None):
     """Start application."""
+    cache = _parser(args)
     craigslist = Craigslist()
-    craigslist.run()
+    craigslist.run(cache=cache)
 
 
 if __name__ == '__main__':
