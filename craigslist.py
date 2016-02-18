@@ -264,9 +264,9 @@ def _parser(args):
 
 def concurrentdownload(urls):
     """Download URLs concurrently and return their HTML."""
-    workers = cpu_count() * 4
-    pool = Pool(processes=workers)
-    return ''.join(pool.map(gethtml, urls))
+    processes = cpu_count() * 4
+    with Pool(processes) as pool:
+        return ''.join(pool.map(gethtml, urls))
 
 
 def gethtml(url):
