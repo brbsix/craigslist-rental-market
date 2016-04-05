@@ -28,7 +28,7 @@ class Craigslist:
 
     def __init__(self):
         # default values
-        self.minprice = 800
+        self.minprice = 100
         self.url = 'https://sfbay.craigslist.org'
 
         # query values
