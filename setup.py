@@ -1,12 +1,24 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from setuptools import setup
 
 
-def read(filename):
-    with open(filename) as f:
-        return f.read()
+def read(path):
+    """Convert Markdown to reStructuredText if possible."""
+    with open(path) as f:
+        text = f.read()
 
+    try:
+        import pypandoc
+        return pypandoc.convert(text, 'rst', 'md')
+    except ImportError:
+        return text
+
+
+# allow setup.py to be run from any path
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 setup(
     name='craigslist-rental-market',
