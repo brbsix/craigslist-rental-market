@@ -28,7 +28,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 setup(
     name='craigslist-rental-market',
-    version='0.0.6',
+    version='0.0.7',
     description='Display Craigslist rental market statistics',
     author='Brian Beffa',
     author_email='brbsix@gmail.com',
