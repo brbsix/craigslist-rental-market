@@ -229,8 +229,11 @@ class Craigslist:
                     for key in keys_to_delete:
                         session.cache.delete(key)
 
-        # print statistics
-        self._print()
+        # print statistics (if any price data exists)
+        if self.prices:
+            self._print()
+        else:
+            print('Nothing found for that search.')
 
 
 def _parser(args):
