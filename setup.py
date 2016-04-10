@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Application setup script
+
+To build package:
+python3 setup.py sdist bdist_wheel clean
+"""
 
 import os
 
@@ -7,8 +13,8 @@ from setuptools import setup
 
 def read(path):
     """Convert Markdown to reStructuredText if possible."""
-    with open(path) as f:
-        text = f.read()
+    with open(path) as file:
+        text = file.read()
 
     try:
         import pypandoc
