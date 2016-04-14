@@ -15,7 +15,7 @@ Usage
     craigslist
 
 Example
---------------
+--------
 
     [?] Which site?: 
      > sf bayarea
