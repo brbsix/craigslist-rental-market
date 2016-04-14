@@ -13,8 +13,8 @@ from setuptools import setup
 
 def read(path):
     """Convert Markdown to reStructuredText if possible."""
-    with open(path) as file:
-        text = file.read()
+    with open(path) as file_object:
+        text = file_object.read()
 
     try:
         import pypandoc
