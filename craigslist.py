@@ -168,7 +168,7 @@ class Craigslist:
                             choices=[None] + sorted(
                                 neighborhoods,
                                 key=lambda x: x.lower())
-                            )
+                        )
                     ])['neighborhood']
 
                     if results_neighborhood is not None:
