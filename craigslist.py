@@ -13,11 +13,11 @@ from multiprocessing import Pool, cpu_count
 from textwrap import dedent
 
 # external imports
-from bs4 import BeautifulSoup
 import appdirs
 import inquirer
 import requests
 import requests_cache
+from bs4 import BeautifulSoup
 
 
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
