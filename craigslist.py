@@ -45,7 +45,7 @@ class Craigslist:
     def _getneighborhoods(self):
         """Return dictionary of neighborhoods for given site and region."""
 
-        url = '%ssearch/%s/%s' % (self.site, self.region, self.search)
+        url = join(self.site, 'search', self.region, self.search)
 
         soup = getsoup(url)
 
@@ -54,14 +54,18 @@ class Craigslist:
 
     def _getprices(self):
         """Return list of prices for rental units."""
+        base = join(self.site, 'search', self.region, self.search)
 
-        template = '{}search/{}{}?s=%d&bedrooms={}&max_price={}&min_price={}{}'
+        # pylint: disable=protected-access
+        encode_params = requests.models.RequestEncodingMixin._encode_params
+        params = encode_params({
+            'bedrooms': self.bedrooms,
+            'max_price': self.maxprice,
+            'min_price': self.minprice,
+            'nh': self.neighborhood
+        })
 
-        urlpattern = template.format(
-            self.site, self.region + '/' if self.region is not None else '',
-            self.search, self.bedrooms, self.maxprice, self.minprice,
-            '&nh={}'.format(self.neighborhood) if self.neighborhood is not
-            None else '')
+        urlpattern = '{}?s=%d&{}'.format(base, params)
 
         # create an iterator of all the URLs to query
         urls = (urlpattern % i for i in range(0, 2500, 100))
@@ -84,7 +88,7 @@ class Craigslist:
     def _getregions(self):
         """Return default and dictionary of regions for given site."""
 
-        url = '%ssearch/%s' % (self.site, self.search)
+        url = join(self.site, 'search', self.search)
         soup = getsoup(url)
         tags = soup.select('#subArea > option')
 
@@ -264,6 +268,19 @@ def gethtml(url):
 def getsoup(url):
     """Return BeautifulSoup instance for given URL."""
     return BeautifulSoup(gethtml(url), 'html.parser')
+
+
+def join(base, *components):
+    """Join two or more URL components, inserting '/' as needed."""
+    sep = '/'
+    path = base
+    for item in components:
+        if item:
+            if not path or path.endswith(sep):
+                path += item
+            else:
+                path += sep + item
+    return path
 
 
 def main(args=None):
