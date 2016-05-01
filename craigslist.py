@@ -8,7 +8,7 @@ import os
 import re
 import statistics
 import time
-from datetime import datetime as dt, timedelta
+from datetime import timedelta
 from multiprocessing import Pool, cpu_count
 from textwrap import dedent
 
@@ -207,26 +207,7 @@ class Craigslist:
 
         # remove expired cache entries
         if cache:
-            # check whether `remove_expired_responses` is implemented
-            try:
-                requests_cache.remove_expired_responses()
-            except AttributeError:
-                session = requests.Session()
-                # pylint: disable=protected-access
-                if session._cache_expire_after:
-                    # pylint: disable=protected-access
-                    created_before = dt.utcnow() - session._cache_expire_after
-                    keys_to_delete = set()
-                    for key in session.cache.responses:
-                        try:
-                            created_at = session.cache.responses[key][1]
-                        except KeyError:
-                            continue
-                        if created_at < created_before:
-                            keys_to_delete.add(key)
-
-                    for key in keys_to_delete:
-                        session.cache.delete(key)
+            requests_cache.core.remove_expired_responses()
 
         # print statistics (if any price data exists)
         if self.prices:

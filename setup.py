@@ -39,7 +39,7 @@ setup(
     py_modules=['craigslist'],
     install_requires=[
         'appdirs', 'beautifulsoup4', 'inquirer',
-        'requests', 'requests-cache-latest'
+        'requests', 'requests-cache>=0.4.11'
     ],
     entry_points={
         'console_scripts': ['craigslist=craigslist:main'],
