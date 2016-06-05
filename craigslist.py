@@ -248,7 +248,7 @@ def _parser(args):
         '--version',
         action='version',
         help=argparse.SUPPRESS,
-        version='%(prog)s 0.0.4')
+        version='%(prog)s 0.0.8')
 
     return parser.parse_args(args).cache
 
