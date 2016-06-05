@@ -5,14 +5,18 @@ Display Craigslist rental market statistics.
 Installation
 -------------
 
-Install via pip:
+Install from [PyPI](https://pypi.python.org/pypi/craigslist-rental-market) via pip:
 
     pip3 install --user craigslist-rental-market
+
+Compatible with Python 3 only.
 
 Usage
 ------
 
     craigslist
+
+All HTTP requests are cached for 30 minutes (so you can re-run similar queries without additional traffic). To disable this behavior, use the `--no-cache` option flag.
 
 Example
 --------
