@@ -7,6 +7,7 @@ import argparse
 import os
 import re
 import statistics
+import sys
 import time
 from datetime import timedelta
 from multiprocessing import Pool, cpu_count
@@ -127,7 +128,7 @@ class Craigslist:
         """Query user for information."""
         sites = self._getsites()
 
-        results_site = inquirer.prompt([
+        results_site = prompt([
             inquirer.List(
                 'site',
                 message='Which site?',
@@ -147,7 +148,7 @@ class Craigslist:
         default_region, regions = self._getregions()
 
         if regions:
-            results_region = inquirer.prompt([
+            results_region = prompt([
                 inquirer.List(
                     'region',
                     message='Which region?',
@@ -164,7 +165,7 @@ class Craigslist:
             if self.region is not None:
                 neighborhoods = self._getneighborhoods()
                 if neighborhoods:
-                    results_neighborhood = inquirer.prompt([
+                    results_neighborhood = prompt([
                         inquirer.List(
                             'neighborhood',
                             message='Which neighborhood?',
@@ -177,7 +178,7 @@ class Craigslist:
                     if results_neighborhood is not None:
                         self.neighborhood = neighborhoods[results_neighborhood]
 
-        results_bedrooms = inquirer.prompt([
+        results_bedrooms = prompt([
             inquirer.List('bedrooms',
                           message='How many bedrooms?',
                           choices=['%dbr' % i for i in range(1, 7)])
@@ -286,8 +287,23 @@ def main(args=None):
     """Start application."""
     cache = _parser(args)
     craigslist = Craigslist()
-    craigslist.run(cache=cache)
+
+    try:
+        craigslist.run(cache=cache)
+    except KeyboardInterrupt:
+        print('Cancelled by user\n', file=sys.stderr)
+        return 1
+
+
+def prompt(questions):
+    """Adapted from inquirer.prompt so as to not suppress KeyboardInterrupt."""
+    render = inquirer.render.console.ConsoleRender()
+    answers = {}
+
+    for question in questions:
+        answers[question.name] = render.render(question, answers)
+    return answers
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
