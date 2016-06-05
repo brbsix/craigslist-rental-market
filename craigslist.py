@@ -22,7 +22,6 @@ from bs4 import BeautifulSoup
 
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
 class Craigslist:
-
     """Scrape Craigslist listings and display resulting statistics"""
 
     def __init__(self):
