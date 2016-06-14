@@ -9,8 +9,8 @@ import re
 import statistics
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
-from multiprocessing import Pool, cpu_count
 from textwrap import dedent
 
 # external imports
@@ -255,9 +255,8 @@ def _parser(args):
 
 def concurrentdownload(urls):
     """Download URLs concurrently and return their HTML."""
-    processes = cpu_count() * 4
-    with Pool(processes) as pool:
-        return ''.join(pool.map(gethtml, urls))
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        return ''.join(executor.map(gethtml, urls))
 
 
 def gethtml(url):
